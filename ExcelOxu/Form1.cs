@@ -1,6 +1,5 @@
 ﻿using ClosedXML.Excel;
 using System.Data;
-using System.Text.RegularExpressions;
 
 namespace ExcelOxu
 {
@@ -47,7 +46,8 @@ namespace ExcelOxu
 
             var dt = new DataTable();
             dt.Columns.Add("Dərman adı", typeof(string));
-            Dictionary<string, int> medicines = new();
+            List<string> prevCities = [];
+            Dictionary<string, int> medicines = [];
             int lastColumn = 0;
             bool isSpecial = false;
             DataTable specialMeds = new();
@@ -64,7 +64,9 @@ namespace ExcelOxu
                 {
                     string cityName = row.Cell(2).GetString();
                     if (cityName.Contains("Şəxsi apteklər"))
+                    {
                         isSpecial = true;
+                    }
                     else
                     {
                         dt.Columns.Add(cityName, typeof(double));
@@ -104,17 +106,29 @@ namespace ExcelOxu
                 }
                 else if (outline == 3 && isSpecial)
                 {
+                    string rawMedName = lastMedName;
                     string rawPharmacyInfo = row.Cell(2).GetString().Trim();
+
                     double count = 1;
-                    string medName = NormalizeMedName(lastMedName);
+                    string medName = NormalizeMedName(rawMedName);
 
+                    // şəhər adları siyahısı
                     string extractedCity = "";
-                    var possibleCities = new[] {
-                        "Ağcabədi", "Bərdə", "Füzuli", "Tər-Tər", "Naftalan", "Goranboy",
-                        "Şəmkir-Çinarlı", "Gəncə", "Ağdam", "Beyləqan", "Qaradağ", "Göygöl",
-                        "Şəki", "Quba", "Sumqayıt", "Qəbələ", "Şirvan"
-                    };
+                    string[] possibleCities = new[]
+{
+     "Ağcabədi", "Ağdam", "Ağdaş", "Ağstafa", "Ağsu", "Astara", "Balakən", "Bərdə",
+    "Beyləqan", "Biləsuvar", "Cəbrayıl", "Cəlilabad", "Daşkəsən", "Füzuli", "Gədəbəy", "Gəncə",
+    "Goranboy", "Göyçay", "Göygöl", "Hacıqabul", "İmişli", "İsmayıllı", "Kəlbəcər", "Kürdəmir",
+    "Qax", "Qazax", "Qəbələ", "Qobustan", "Quba", "Qubadlı", "Qusar", "Laçın", "Lənkəran",
+    "Lerik", "Masallı", "Mingəçevir", "Naftalan", "Naxçıvan", "Neftçala", "Oğuz", "Ordubad",
+    "Saatlı", "Sabirabad", "Şirvan", "Şabran", "Şahbuz", "Şəki", "Salyan", "Şamaxı", "Şəmkir",
+    "Samux", "Şərur", "Siyəzən", "Sumqayıt", "Şuşa", "Tərtər", "Tovuz", "Ucar", "Xaçmaz", "Xankəndi",
+    "Xızı", "Xocalı", "Xocavənd", "Yardımlı", "Yevlax", "Zaqatala", "Zəngilan", "Zərdab"
+};
 
+
+
+                    // şəhəri tapmağa çalış
                     foreach (var city in possibleCities)
                     {
                         if (rawPharmacyInfo.Contains(city, StringComparison.OrdinalIgnoreCase))
@@ -124,21 +138,26 @@ namespace ExcelOxu
                         }
                     }
 
-                    if (string.IsNullOrEmpty(extractedCity))
-                    {
-                        var match = Regex.Match(rawPharmacyInfo, @"Aptek.*?\)\s+(.*?)(\s+|,|$)", RegexOptions.IgnoreCase);
-                        if (match.Success)
-                            extractedCity = match.Groups[1].Value.Trim();
-                    }
-
                     if (!string.IsNullOrEmpty(extractedCity))
                     {
+                        // eyni şəhərdən olanlar bir sütunda toplanacaq
                         var dr = specialMeds.NewRow();
                         dr[0] = medName;
                         dr[1] = extractedCity;
                         dr[2] = count;
                         specialMeds.Rows.Add(dr);
                     }
+                    else
+                    {
+                        // şəhər tapılmayıbsa – o zaman tam ünvanı əlavə et (yalnız bu halda!)
+                        var dr = specialMeds.NewRow();
+                        dr[0] = medName;
+                        dr[1] = rawPharmacyInfo; // Tam ünvan sütun kimi çıxacaq
+                        dr[2] = count;
+                        specialMeds.Rows.Add(dr);
+                    }
+
+
                 }
             }
 
@@ -147,12 +166,22 @@ namespace ExcelOxu
             finalTable.Columns.Add("Şəhər", typeof(string));
             finalTable.Columns.Add("Say", typeof(double));
 
+            string[] notCities = ["ampula", "məhlul", "gel", "tabletka", "şampun", "kapsul", "aerozol", "damcı", "sprey", "krem"];
             Dictionary<string, double> totals = new();
+
             void AddOrUpdate(string medName, string city, double count)
             {
+                if (!string.IsNullOrWhiteSpace(city))
+                    city = char.ToUpper(city[0]) + city[1..].ToLowerInvariant();
+
+                if (string.IsNullOrWhiteSpace(city) || notCities.Any(f => city.ToLowerInvariant().Contains(f)))
+                    return;
+
                 string key = $"{medName.ToLowerInvariant()}|{city.ToLowerInvariant()}";
-                if (totals.ContainsKey(key)) totals[key] += count;
-                else totals[key] = count;
+                if (totals.ContainsKey(key))
+                    totals[key] += count;
+                else
+                    totals[key] = count;
             }
 
             foreach (DataRow dr in dt.Rows)
@@ -162,7 +191,8 @@ namespace ExcelOxu
                 {
                     string city = dt.Columns[i].ColumnName;
                     double count = double.TryParse(dr[i]?.ToString(), out var c) ? c : 0;
-                    if (count > 0) AddOrUpdate(medName, city, count);
+                    if (count > 0)
+                        AddOrUpdate(medName, city, count);
                 }
             }
 
@@ -171,7 +201,8 @@ namespace ExcelOxu
                 string medName = dr[0].ToString();
                 string city = dr[1].ToString();
                 double count = double.TryParse(dr[2]?.ToString(), out var c) ? c : 0;
-                if (count > 0) AddOrUpdate(medName, city, count);
+                if (count > 0)
+                    AddOrUpdate(medName, city, count);
             }
 
             foreach (var kvp in totals)
@@ -186,11 +217,13 @@ namespace ExcelOxu
 
             DataTable pivotTable = new();
             pivotTable.Columns.Add("Dərman adı", typeof(string));
+
             var uniqueCities = finalTable.AsEnumerable()
                 .Select(r => r.Field<string>("Şəhər"))
                 .Distinct()
                 .OrderBy(c => c)
                 .ToList();
+
             foreach (var city in uniqueCities)
                 pivotTable.Columns.Add(city, typeof(double));
 
@@ -204,11 +237,15 @@ namespace ExcelOxu
             {
                 var newRow = pivotTable.NewRow();
                 newRow["Dərman adı"] = med;
+
                 foreach (var city in uniqueCities)
                 {
-                    var match = finalTable.AsEnumerable().FirstOrDefault(r => r.Field<string>("Dərman adı") == med && r.Field<string>("Şəhər") == city);
+                    var match = finalTable.AsEnumerable()
+                        .FirstOrDefault(r => r.Field<string>("Dərman adı") == med && r.Field<string>("Şəhər") == city);
+
                     newRow[city] = match != null ? match.Field<double>("Say") : 0;
                 }
+
                 pivotTable.Rows.Add(newRow);
             }
 
@@ -223,8 +260,14 @@ namespace ExcelOxu
                 {
                     using var saveWb = new XLWorkbook();
                     var ws1 = saveWb.Worksheets.Add("Pivot_Hesabatı");
+
+                    // Başlıkları yaz
                     for (int c = 0; c < pivotTable.Columns.Count; c++)
+                    {
                         ws1.Cell(1, c + 1).Value = pivotTable.Columns[c].ColumnName;
+                    }
+
+                    // Satırları yaz
                     for (int r = 0; r < pivotTable.Rows.Count; r++)
                     {
                         for (int c = 0; c < pivotTable.Columns.Count; c++)
@@ -233,10 +276,18 @@ namespace ExcelOxu
                             ws1.Cell(r + 2, c + 1).Value = value == DBNull.Value ? "" : value.ToString();
                         }
                     }
+
                     ws1.Columns().AdjustToContents();
                     saveWb.SaveAs(sfd.FileName);
-                    MessageBox.Show("Nəticə saxlanıldı:\n" + sfd.FileName, "Uğurlu", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    MessageBox.Show(
+                        "Nəticə saxlanıldı:\n" + sfd.FileName,
+                        "Uğurlu",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information
+                    );
                 }
+
             }
 
             dataGridView1.DataSource = pivotTable;
