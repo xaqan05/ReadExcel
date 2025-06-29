@@ -97,7 +97,7 @@ namespace ExcelOxu
                     }
 
                     string medName = NormalizeMedName(medNameRaw);
-                    double medCount = row.Cell(3).GetValue<double?>() ?? 0;
+                    double medCount = Math.Abs(row.Cell(3).GetValue<double?>() ?? 0);
 
                     if (!medicines.ContainsKey(medName))
                     {
@@ -122,7 +122,7 @@ namespace ExcelOxu
                     string rawMedName = lastMedName;
                     string rawPharmacyInfo = row.Cell(2).GetString().Trim();
 
-                    double count = row.Cell(3).GetValue<double?>() ?? 1;
+                    double count = Math.Abs(row.Cell(3).GetValue<double?>() ?? 0);
 
                     string medName = NormalizeMedName(rawMedName);
 
@@ -151,11 +151,6 @@ namespace ExcelOxu
                             extractedCity = city;
                             break;
                         }
-                        else
-                        {
-                            Debug.WriteLine($"Tapılmadı: {rawPharmacyInfo}");
-                        }
-
                     }
 
 
@@ -210,7 +205,7 @@ namespace ExcelOxu
                 {
                     string city = dt.Columns[i].ColumnName;
                     double count = double.TryParse(dr[i]?.ToString(), out var c) ? c : 0;
-                    if (count > 0)
+                    if (count != 0)
                         AddOrUpdate(medName, city, count);
                 }
             }
@@ -220,7 +215,7 @@ namespace ExcelOxu
                 string medName = dr[0].ToString();
                 string city = dr[1].ToString();
                 double count = double.TryParse(dr[2]?.ToString(), out var c) ? c : 0;
-                if (count > 0)
+                if (count != 0)
                     AddOrUpdate(medName, city, count);
             }
 
