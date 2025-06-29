@@ -1,5 +1,6 @@
 ﻿using ClosedXML.Excel;
 using System.Data;
+using System.Diagnostics;
 
 namespace ExcelOxu
 {
@@ -31,6 +32,18 @@ namespace ExcelOxu
 
                 return raw.Trim().ToLowerInvariant();
             }
+            string NormalizeText(string text)
+            {
+                return text.ToLowerInvariant()
+                    .Replace("ə", "e")
+                    .Replace("ı", "i")
+                    .Replace("ö", "o")
+                    .Replace("ü", "u")
+                    .Replace("ç", "c")
+                    .Replace("ş", "s")
+                    .Replace("ğ", "g");
+            }
+
 
             using var ofd = new OpenFileDialog()
             {
@@ -109,10 +122,10 @@ namespace ExcelOxu
                     string rawMedName = lastMedName;
                     string rawPharmacyInfo = row.Cell(2).GetString().Trim();
 
-                    double count = 1;
+                    double count = row.Cell(3).GetValue<double?>() ?? 1;
+
                     string medName = NormalizeMedName(rawMedName);
 
-                    // şəhər adları siyahısı
                     string extractedCity = "";
                     string[] possibleCities = new[]
 {
@@ -128,19 +141,26 @@ namespace ExcelOxu
 
 
 
-                    // şəhəri tapmağa çalış
+                    string normPharmacy = NormalizeText(rawPharmacyInfo);
+
                     foreach (var city in possibleCities)
                     {
-                        if (rawPharmacyInfo.Contains(city, StringComparison.OrdinalIgnoreCase))
+                        string normCity = NormalizeText(city);
+                        if (normPharmacy.Contains(normCity))
                         {
                             extractedCity = city;
                             break;
                         }
+                        else
+                        {
+                            Debug.WriteLine($"Tapılmadı: {rawPharmacyInfo}");
+                        }
+
                     }
+
 
                     if (!string.IsNullOrEmpty(extractedCity))
                     {
-                        // eyni şəhərdən olanlar bir sütunda toplanacaq
                         var dr = specialMeds.NewRow();
                         dr[0] = medName;
                         dr[1] = extractedCity;
@@ -149,10 +169,9 @@ namespace ExcelOxu
                     }
                     else
                     {
-                        // şəhər tapılmayıbsa – o zaman tam ünvanı əlavə et (yalnız bu halda!)
                         var dr = specialMeds.NewRow();
                         dr[0] = medName;
-                        dr[1] = rawPharmacyInfo; // Tam ünvan sütun kimi çıxacaq
+                        dr[1] = rawPharmacyInfo; 
                         dr[2] = count;
                         specialMeds.Rows.Add(dr);
                     }
@@ -261,19 +280,26 @@ namespace ExcelOxu
                     using var saveWb = new XLWorkbook();
                     var ws1 = saveWb.Worksheets.Add("Pivot_Hesabatı");
 
-                    // Başlıkları yaz
                     for (int c = 0; c < pivotTable.Columns.Count; c++)
                     {
                         ws1.Cell(1, c + 1).Value = pivotTable.Columns[c].ColumnName;
                     }
 
-                    // Satırları yaz
                     for (int r = 0; r < pivotTable.Rows.Count; r++)
                     {
                         for (int c = 0; c < pivotTable.Columns.Count; c++)
                         {
+                            var cell = ws1.Cell(r + 2, c + 1);
                             var value = pivotTable.Rows[r][c];
-                            ws1.Cell(r + 2, c + 1).Value = value == DBNull.Value ? "" : value.ToString();
+
+                            if (value is double d)
+                            {
+                                cell.Value = d;
+                            }
+                            else
+                            {
+                                cell.Value = value?.ToString() ?? "";
+                            }
                         }
                     }
 
