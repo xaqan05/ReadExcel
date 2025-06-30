@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ExcelOxu")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b427725b0f772cadfe1f4527c643fbd71ca432e0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7e73243b5dcbe839c5bd645b1eec7ff40a486616")]
 [assembly: System.Reflection.AssemblyProductAttribute("ExcelOxu")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ExcelOxu")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

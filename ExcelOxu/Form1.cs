@@ -15,15 +15,10 @@ namespace ExcelOxu
         {
             string NormalizeMedName(string raw)
             {
-                while (raw.Contains("(") && raw.Contains(")"))
-                {
-                    int start = raw.IndexOf("(");
-                    int end = raw.IndexOf(")", start);
-                    if (start >= 0 && end > start)
-                        raw = raw.Remove(start, end - start + 1);
-                    else
-                        break;
-                }
+                int lastStart = raw.LastIndexOf("(");
+                int lastEnd = raw.LastIndexOf(")");
+                if (lastStart >= 0 && lastEnd > lastStart)
+                    raw = raw.Remove(lastStart, lastEnd - lastStart + 1);
 
                 if (raw.Contains("№"))
                 {
@@ -128,16 +123,17 @@ namespace ExcelOxu
 
                     string extractedCity = "";
                     string[] possibleCities = new[]
-{
-     "Ağcabədi", "Ağdam", "Ağdaş", "Ağstafa", "Ağsu", "Astara", "Balakən", "Bərdə",
-    "Beyləqan", "Biləsuvar", "Cəbrayıl", "Cəlilabad", "Daşkəsən", "Füzuli", "Gədəbəy", "Gəncə",
-    "Goranboy", "Göyçay", "Göygöl", "Hacıqabul", "İmişli", "İsmayıllı", "Kəlbəcər", "Kürdəmir",
-    "Qax", "Qazax", "Qəbələ", "Qobustan", "Quba", "Qubadlı", "Qusar", "Laçın", "Lənkəran",
-    "Lerik", "Masallı", "Mingəçevir", "Naftalan", "Naxçıvan", "Neftçala", "Oğuz", "Ordubad",
-    "Saatlı", "Sabirabad", "Şirvan", "Şabran", "Şahbuz", "Şəki", "Salyan", "Şamaxı", "Şəmkir",
-    "Samux", "Şərur", "Siyəzən", "Sumqayıt", "Şuşa", "Tərtər", "Tovuz", "Ucar", "Xaçmaz", "Xankəndi",
-    "Xızı", "Xocalı", "Xocavənd", "Yardımlı", "Yevlax", "Zaqatala", "Zəngilan", "Zərdab"
-};
+                        {
+    "Ağcabədi", "Ağdam", "Ağdaş", "Ağstafa", "Akstafa", "Alıcılar", "Astara",
+    "Balakən", "Beyləqan", "Bərdə", "Biləsuvar", "Cəlilabad", "Daşkəsən",
+    "Füzuli", "Gədəbəy", "Gəncə", "Goranboy", "Göyçay", "Göygöl", "Hacıqabul",
+     "İmişli", "İsmayıllı", "Kürdəmir", "Lerik", "Lənkəran", "Masallı",
+     "Mingəçevir", "Naftalan", "Neftçala", "Oğuz", "Qax", "Qazax", "Qəbələ",
+        "Quba", "Qusar", "Saatlı", "Sabirabad", "Şabran", "Salyan", "Şamaxı",
+    "Samux", "Şəki", "Şəmkir", "Şəmkir-Çinarli", "Şirvan", "Siyezen",
+        "Tərtər", "Tovuz", "Ucar", "Xaçmaz", "Xankəndi", "Xudat", "Yardımlı",
+         "Yevlax", "Zaqatala", "Zəngilan", "Zərdab"
+                        };
 
 
 
@@ -151,11 +147,6 @@ namespace ExcelOxu
                             extractedCity = city;
                             break;
                         }
-                        else
-                        {
-                            Debug.WriteLine($"Tapılmadı: {rawPharmacyInfo}");
-                        }
-
                     }
 
 
@@ -171,7 +162,7 @@ namespace ExcelOxu
                     {
                         var dr = specialMeds.NewRow();
                         dr[0] = medName;
-                        dr[1] = rawPharmacyInfo; 
+                        dr[1] = rawPharmacyInfo;
                         dr[2] = count;
                         specialMeds.Rows.Add(dr);
                     }
@@ -317,6 +308,8 @@ namespace ExcelOxu
             }
 
             dataGridView1.DataSource = pivotTable;
+            dataGridView1.Visible = false;
+            dataGridView1.SendToBack();
         }
     }
 }

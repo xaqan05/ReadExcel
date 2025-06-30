@@ -119,6 +119,7 @@ C:\Users\Victus\Desktop\ReadExcel\ExcelOxu\bin\Debug\net8.0-windows\SixLabors.Fo
 C:\Users\Victus\Desktop\ReadExcel\ExcelOxu\bin\Debug\net8.0-windows\System.IO.Packaging.dll
 C:\Users\Victus\Desktop\ReadExcel\ExcelOxu\obj\Debug\net8.0-windows\ExcelOxu.csproj.AssemblyReference.cache
 C:\Users\Victus\Desktop\ReadExcel\ExcelOxu\obj\Debug\net8.0-windows\ExcelOxu.Form1.resources
+C:\Users\Victus\Desktop\ReadExcel\ExcelOxu\obj\Debug\net8.0-windows\ExcelOxu.Properties.Resources.resources
 C:\Users\Victus\Desktop\ReadExcel\ExcelOxu\obj\Debug\net8.0-windows\ExcelOxu.csproj.GenerateResource.cache
 C:\Users\Victus\Desktop\ReadExcel\ExcelOxu\obj\Debug\net8.0-windows\ExcelOxu.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\Victus\Desktop\ReadExcel\ExcelOxu\obj\Debug\net8.0-windows\ExcelOxu.AssemblyInfoInputs.cache
