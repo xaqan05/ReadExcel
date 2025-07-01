@@ -121,34 +121,34 @@ namespace ExcelOxu
 
                     string medName = NormalizeMedName(rawMedName);
 
-                    string extractedCity = "";
                     string[] possibleCities = new[]
-                        {
-    "Ağcabədi", "Ağdam", "Ağdaş", "Ağstafa", "Akstafa", "Alıcılar", "Astara",
-    "Balakən", "Beyləqan", "Bərdə", "Biləsuvar", "Cəlilabad", "Daşkəsən",
-    "Füzuli", "Gədəbəy", "Gəncə", "Goranboy", "Göyçay", "Göygöl", "Hacıqabul",
-     "İmişli", "İsmayıllı", "Kürdəmir", "Lerik", "Lənkəran", "Masallı",
-     "Mingəçevir", "Naftalan", "Neftçala", "Oğuz", "Qax", "Qazax", "Qəbələ",
+                    {
+        "Şəmkir","Füzuli","Ağcabədi", "Ağdam", "Ağdaş", "Ağstafa", "Akstafa", "Alıcılar", "Astara",
+        "Balakən", "Beyləqan", "Bərdə", "Biləsuvar", "Cəlilabad", "Daşkəsən",
+        "Gədəbəy", "Gəncə", "Goranboy", "Göyçay", "Göygöl", "Hacıqabul",
+        "İmişli", "İsmayıllı", "Kürdəmir", "Lerik", "Masallı",
+        "Mingəçevir", "Naftalan", "Neftçala", "Oğuz", "Qax", "Qazax", "Qəbələ",
         "Quba", "Qusar", "Saatlı", "Sabirabad", "Şabran", "Salyan", "Şamaxı",
-    "Samux", "Şəki", "Şəmkir", "Şəmkir-Çinarli", "Şirvan", "Siyezen",
+        "Samux", "Şəki","Şuşa", "Şirvan", "Siyezen",
         "Tərtər", "Tovuz", "Ucar", "Xaçmaz", "Xankəndi", "Xudat", "Yardımlı",
-         "Yevlax", "Zaqatala", "Zəngilan", "Zərdab"
-                        };
-
-
+        "Yevlax", "Zaqatala", "Zəngilan", "Zərdab","Lənkəran"
+    };
 
                     string normPharmacy = NormalizeText(rawPharmacyInfo);
+
+                    string extractedCity = "";
+                    int bestPos = int.MaxValue;
 
                     foreach (var city in possibleCities)
                     {
                         string normCity = NormalizeText(city);
-                        if (normPharmacy.Contains(normCity))
+                        int pos = normPharmacy.IndexOf(normCity);
+                        if (pos >= 0 && pos < bestPos)
                         {
+                            bestPos = pos;
                             extractedCity = city;
-                            break;
                         }
                     }
-
 
                     if (!string.IsNullOrEmpty(extractedCity))
                     {
@@ -166,8 +166,6 @@ namespace ExcelOxu
                         dr[2] = count;
                         specialMeds.Rows.Add(dr);
                     }
-
-
                 }
             }
 
