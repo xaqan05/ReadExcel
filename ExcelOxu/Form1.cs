@@ -144,9 +144,9 @@ namespace ExcelOxu
                         "Ağdaş", "Göyçay", "Mingəçevir", "Ucar", "Yevlax", "Zərdab",
                         "Alıcılar",
                         "Ağstafa", "Qazax", "Tovuz",
-                        "Balakən", "İsmayıllı", "Qax", "Qəbələ", "Şəki", "Zaqatala",
+                        "Balakən", "İsmayıllı", "Qax", "Qəbələ", "Şəki", "Zaqatala","Oğuz Xaçmaz kəndi",
                         "Hacıqabul", "İmişli", "Kürdəmir", "Neftçala", "Saatlı", "Sabirabad", "Salyan", "Şamaxı", "Şirvan",
-                        "Quba", "Qusar", "Şabran", "Siyəzən", "Xaçmaz", "Xudat", "Zəngilan"
+                        "Quba", "Qusar", "Şabran", "Siyezen", "Xaçmaz", "Xudat"
                     };
 
                     string normPharmacy = NormalizeText(rawPharmacyInfo);
