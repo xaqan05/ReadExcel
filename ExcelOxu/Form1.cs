@@ -68,10 +68,19 @@ namespace ExcelOxu
             foreach (var row in ws.RowsUsed())
             {
                 int outline = row.OutlineLevel;
-                lastBranchName = row.Cell(1).GetString();
+
+                for (int i = 1; i <= 5; i++)
+                {
+                    var val = row.Cell(i).GetString().Trim();
+                    if (!string.IsNullOrEmpty(val) && val.ToLower().Contains("filial"))
+                    {
+                        lastBranchName = val;
+                        break;
+                    }
+                }
+
                 if (string.IsNullOrWhiteSpace(lastBranchName))
                     lastBranchName = "Bilinməyən Filial";
-                
                 if (outline == 1)
                 {
 
