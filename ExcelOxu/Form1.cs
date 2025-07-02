@@ -27,6 +27,7 @@ namespace ExcelOxu
 
                 return raw.Trim().ToLowerInvariant();
             }
+
             string NormalizeText(string text)
             {
                 return text.ToLowerInvariant()
@@ -38,7 +39,6 @@ namespace ExcelOxu
                     .Replace("ş", "s")
                     .Replace("ğ", "g");
             }
-
 
             using var ofd = new OpenFileDialog()
             {
@@ -60,17 +60,23 @@ namespace ExcelOxu
             bool isSpecial = false;
             DataTable specialMeds = new();
             specialMeds.Columns.Add("Dərman adı", typeof(string));
-            specialMeds.Columns.Add("Şəhər", typeof(string));
+            specialMeds.Columns.Add("Şəhər və ya Filial", typeof(string));
             specialMeds.Columns.Add("Say", typeof(double));
+            string lastBranchName = "";
             string lastMedName = "";
 
             foreach (var row in ws.RowsUsed())
             {
                 int outline = row.OutlineLevel;
-
+                lastBranchName = row.Cell(1).GetString();
+                if (string.IsNullOrWhiteSpace(lastBranchName))
+                    lastBranchName = "Bilinməyən Filial";
+                
                 if (outline == 1)
                 {
+
                     string cityName = row.Cell(2).GetString();
+
                     if (cityName.Contains("Şəxsi apteklər"))
                     {
                         isSpecial = true;
@@ -114,6 +120,7 @@ namespace ExcelOxu
                 }
                 else if (outline == 3 && isSpecial)
                 {
+
                     string rawMedName = lastMedName;
                     string rawPharmacyInfo = row.Cell(2).GetString().Trim();
 
@@ -121,21 +128,19 @@ namespace ExcelOxu
 
                     string medName = NormalizeMedName(rawMedName);
 
-                    string[] possibleCities = new[]
-                    {
-        "Şəmkir","Füzuli","Ağcabədi", "Ağdam", "Ağdaş", "Ağstafa", "Akstafa", "Alıcılar", "Astara",
-        "Balakən", "Beyləqan", "Bərdə", "Biləsuvar", "Cəlilabad", "Daşkəsən",
-        "Gədəbəy", "Gəncə", "Goranboy", "Göyçay", "Göygöl", "Hacıqabul",
-        "İmişli", "İsmayıllı", "Kürdəmir", "Lerik", "Masallı",
-        "Mingəçevir", "Naftalan", "Neftçala", "Oğuz", "Qax", "Qazax", "Qəbələ",
-        "Quba", "Qusar", "Saatlı", "Sabirabad", "Şabran", "Salyan", "Şamaxı",
-        "Samux", "Şəki","Şuşa", "Şirvan", "Siyezen",
-        "Tərtər", "Tovuz", "Ucar", "Xaçmaz", "Xankəndi", "Xudat", "Yardımlı",
-        "Yevlax", "Zaqatala", "Zəngilan", "Zərdab","Lənkəran"
-    };
+                    string[] possibleCities = new[] {
+                        "Ağcabədi", "Ağdam", "Beyləqan", "Bərdə", "Füzuli", "Tərtər",
+                        "Gədəbəy", "Gəncə", "Goranboy", "Naftalan", "Şəmkir-Çinarlı", "Şəmkir",
+                        "Astara", "Biləsuvar", "Cəlilabad", "Lerik", "Lənkəran", "Masallı", "Yardımlı",
+                        "Ağdaş", "Göyçay", "Mingəçevir", "Ucar", "Yevlax", "Zərdab",
+                        "Alıcılar",
+                        "Ağstafa", "Qazax", "Tovuz",
+                        "Balakən", "İsmayıllı", "Qax", "Qəbələ", "Şəki", "Zaqatala",
+                        "Hacıqabul", "İmişli", "Kürdəmir", "Neftçala", "Saatlı", "Sabirabad", "Salyan", "Şamaxı", "Şirvan",
+                        "Quba", "Qusar", "Şabran", "Siyəzən", "Xaçmaz", "Xudat", "Zəngilan"
+                    };
 
                     string normPharmacy = NormalizeText(rawPharmacyInfo);
-
                     string extractedCity = "";
                     int bestPos = int.MaxValue;
 
@@ -150,28 +155,27 @@ namespace ExcelOxu
                         }
                     }
 
+                    string location;
                     if (!string.IsNullOrEmpty(extractedCity))
                     {
-                        var dr = specialMeds.NewRow();
-                        dr[0] = medName;
-                        dr[1] = extractedCity;
-                        dr[2] = count;
-                        specialMeds.Rows.Add(dr);
+                        location = extractedCity;
                     }
                     else
                     {
-                        var dr = specialMeds.NewRow();
-                        dr[0] = medName;
-                        dr[1] = rawPharmacyInfo;
-                        dr[2] = count;
-                        specialMeds.Rows.Add(dr);
+                        location = $"{lastBranchName.Trim()} - {rawPharmacyInfo.Trim()}";
                     }
+
+                    var dr = specialMeds.NewRow();
+                    dr[0] = medName;
+                    dr[1] = location;
+                    dr[2] = count;
+                    specialMeds.Rows.Add(dr);
                 }
             }
 
             DataTable finalTable = new();
             finalTable.Columns.Add("Dərman adı", typeof(string));
-            finalTable.Columns.Add("Şəhər", typeof(string));
+            finalTable.Columns.Add("Şəhər və ya Filial", typeof(string));
             finalTable.Columns.Add("Say", typeof(double));
 
             string[] notCities = ["ampula", "məhlul", "gel", "tabletka", "şampun", "kapsul", "aerozol", "damcı", "sprey", "krem"];
@@ -218,7 +222,7 @@ namespace ExcelOxu
                 var parts = kvp.Key.Split('|');
                 var row = finalTable.NewRow();
                 row["Dərman adı"] = parts[0];
-                row["Şəhər"] = parts[1];
+                row["Şəhər və ya Filial"] = parts[1];
                 row["Say"] = kvp.Value;
                 finalTable.Rows.Add(row);
             }
@@ -226,14 +230,14 @@ namespace ExcelOxu
             DataTable pivotTable = new();
             pivotTable.Columns.Add("Dərman adı", typeof(string));
 
-            var uniqueCities = finalTable.AsEnumerable()
-                .Select(r => r.Field<string>("Şəhər"))
+            var uniqueLocations = finalTable.AsEnumerable()
+                .Select(r => r.Field<string>("Şəhər və ya Filial"))
                 .Distinct()
                 .OrderBy(c => c)
                 .ToList();
 
-            foreach (var city in uniqueCities)
-                pivotTable.Columns.Add(city, typeof(double));
+            foreach (var location in uniqueLocations)
+                pivotTable.Columns.Add(location, typeof(double));
 
             var uniqueMeds = finalTable.AsEnumerable()
                 .Select(r => r.Field<string>("Dərman adı"))
@@ -246,12 +250,12 @@ namespace ExcelOxu
                 var newRow = pivotTable.NewRow();
                 newRow["Dərman adı"] = med;
 
-                foreach (var city in uniqueCities)
+                foreach (var location in uniqueLocations)
                 {
                     var match = finalTable.AsEnumerable()
-                        .FirstOrDefault(r => r.Field<string>("Dərman adı") == med && r.Field<string>("Şəhər") == city);
+                        .FirstOrDefault(r => r.Field<string>("Dərman adı") == med && r.Field<string>("Şəhər və ya Filial") == location);
 
-                    newRow[city] = match != null ? match.Field<double>("Say") : 0;
+                    newRow[location] = match != null ? match.Field<double>("Say") : 0;
                 }
 
                 pivotTable.Rows.Add(newRow);
@@ -302,7 +306,6 @@ namespace ExcelOxu
                         MessageBoxIcon.Information
                     );
                 }
-
             }
 
             dataGridView1.DataSource = pivotTable;
