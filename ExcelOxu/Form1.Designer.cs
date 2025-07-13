@@ -32,6 +32,7 @@
             button1 = new Button();
             dataGridView1 = new DataGridView();
             button2 = new Button();
+            button3 = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
@@ -70,11 +71,23 @@
             button2.UseVisualStyleBackColor = true;
             button2.Click += button2_Click;
             // 
+            // button3
+            // 
+            button3.Location = new Point(508, 42);
+            button3.Margin = new Padding(3, 4, 3, 4);
+            button3.Name = "button3";
+            button3.Size = new Size(192, 44);
+            button3.TabIndex = 3;
+            button3.Text = "Azerimed";
+            button3.UseVisualStyleBackColor = true;
+            button3.Click += button3_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(486, 99);
+            ClientSize = new Size(735, 112);
+            Controls.Add(button3);
             Controls.Add(button2);
             Controls.Add(dataGridView1);
             Controls.Add(button1);
@@ -91,5 +104,6 @@
         private Button button1;
         private DataGridView dataGridView1;
         private Button button2;
+        private Button button3;
     }
 }

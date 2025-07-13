@@ -479,9 +479,9 @@ namespace ExcelOxu
                             NormalizeText(rawPharmacyInfo).Contains(NormalizeText(med)));
 
                         if (isMedicine)
-                            continue; 
+                            continue;
 
-                        location = rawPharmacyInfo.Trim(); 
+                        location = rawPharmacyInfo.Trim();
                     }
 
                     AddOrUpdate(lastMedName, location, medCount);
@@ -583,6 +583,95 @@ namespace ExcelOxu
                     );
                 }
             }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            using var ofd = new OpenFileDialog()
+            {
+                Filter = "Excel Dosyaları|*.xlsx;*.xls",
+                Title = "Excel Faylını Seç"
+            };
+
+            if (ofd.ShowDialog() != DialogResult.OK)
+                return;
+
+            using var wb = new XLWorkbook(ofd.FileName);
+            var ws = wb.Worksheet(1);
+
+            string Normalize(string input)
+            {
+                return input.Trim().ToLower()
+                    .Replace("ə", "e")
+                    .Replace("ı", "i")
+                    .Replace("ö", "o")
+                    .Replace("ü", "u")
+                    .Replace("ç", "c")
+                    .Replace("ş", "s")
+                    .Replace("ğ", "g");
+            }
+
+            var pivot = new Dictionary<string, Dictionary<string, double>>();
+
+            int firstRow = ws.FirstRowUsed().RowNumber() + 1;
+            int lastRow = ws.LastRowUsed().RowNumber();
+
+            for (int rowNum = firstRow; rowNum <= lastRow; rowNum++)
+            {
+                var row = ws.Row(rowNum);
+
+                string eraziRaw = row.Cell(2).GetString();
+                string seher = Normalize(eraziRaw.Split('|')[0]);
+
+                string malAdi = Normalize(row.Cell(4).GetString()); 
+
+                double miqdar = 0;
+                double.TryParse(row.Cell(7).GetValue<string>(), out miqdar);
+
+                if (!pivot.ContainsKey(malAdi))
+                    pivot[malAdi] = new Dictionary<string, double>();
+
+                if (!pivot[malAdi].ContainsKey(seher))
+                    pivot[malAdi][seher] = 0;
+
+                if (miqdar < 0)
+                    pivot[malAdi][seher] -= Math.Abs(miqdar);
+                else
+                    pivot[malAdi][seher] += miqdar;
+            }
+
+            using var newWb = new XLWorkbook();
+            var newWs = newWb.Worksheets.Add("Pivot");
+
+            var allCities = pivot.SelectMany(p => p.Value.Keys).Distinct().OrderBy(x => x).ToList();
+
+            for (int i = 0; i < allCities.Count; i++)
+                newWs.Cell(1, i + 2).Value = allCities[i];
+
+            int rowIndex = 2;
+            foreach (var mal in pivot.Keys.OrderBy(x => x))
+            {
+                newWs.Cell(rowIndex, 1).Value = mal;
+
+                for (int colIndex = 0; colIndex < allCities.Count; colIndex++)
+                {
+                    string seher = allCities[colIndex];
+                    double value = pivot[mal].ContainsKey(seher) ? pivot[mal][seher] : 0;
+                    newWs.Cell(rowIndex, colIndex + 2).Value = value;
+                }
+
+                rowIndex++;
+            }
+
+            using (var sfd = new SaveFileDialog
+            {
+                Filter = "Excel Dosyası (*.xlsx)|*.xlsx",
+                Title = "Nəticəni Excel olaraq Yadda Saxla",
+                FileName = "AzerimedSatish_Hesabati_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".xlsx"
+            })
+
+                if (sfd.ShowDialog() == DialogResult.OK)
+                newWb.SaveAs(sfd.FileName);
         }
     }
 }
