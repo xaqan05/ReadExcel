@@ -31,6 +31,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             button1 = new Button();
             dataGridView1 = new DataGridView();
+            button2 = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
@@ -41,7 +42,7 @@
             button1.Name = "button1";
             button1.Size = new Size(192, 44);
             button1.TabIndex = 0;
-            button1.Text = "Excel Yüklə";
+            button1.Text = "Avromed Region";
             button1.UseVisualStyleBackColor = true;
             button1.Click += button1_Click;
             // 
@@ -58,11 +59,23 @@
             dataGridView1.TabIndex = 1;
             dataGridView1.Visible = false;
             // 
+            // button2
+            // 
+            button2.Location = new Point(265, 42);
+            button2.Margin = new Padding(3, 4, 3, 4);
+            button2.Name = "button2";
+            button2.Size = new Size(192, 44);
+            button2.TabIndex = 2;
+            button2.Text = "Sədəf";
+            button2.UseVisualStyleBackColor = true;
+            button2.Click += button2_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(282, 133);
+            ClientSize = new Size(486, 99);
+            Controls.Add(button2);
             Controls.Add(dataGridView1);
             Controls.Add(button1);
             Icon = (Icon)resources.GetObject("$this.Icon");
@@ -77,5 +90,6 @@
 
         private Button button1;
         private DataGridView dataGridView1;
+        private Button button2;
     }
 }
