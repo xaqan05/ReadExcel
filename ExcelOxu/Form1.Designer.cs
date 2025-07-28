@@ -43,7 +43,7 @@
             button1.Name = "button1";
             button1.Size = new Size(192, 44);
             button1.TabIndex = 0;
-            button1.Text = "Avromed Region";
+            button1.Text = "Avromed Region || Zeytun";
             button1.UseVisualStyleBackColor = true;
             button1.Click += button1_Click;
             // 
