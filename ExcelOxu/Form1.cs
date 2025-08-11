@@ -1,6 +1,6 @@
 ﻿using ClosedXML.Excel;
-using DocumentFormat.OpenXml.Spreadsheet;
 using System.Data;
+using Newtonsoft.Json;
 
 namespace ExcelOxu
 {
@@ -11,8 +11,12 @@ namespace ExcelOxu
             InitializeComponent();
         }
 
+
         private void button1_Click(object sender, EventArgs e)
         {
+            //avromed region
+
+
             string NormalizeMedName(string raw)
             {
                 int lastStart = raw.LastIndexOf("(");
@@ -324,51 +328,95 @@ namespace ExcelOxu
 
         private void button2_Click(object sender, EventArgs e)
         {
-            string[] notCities = ["ampula", "məhlul", "gel", "tabletka", "şampun", "kapsul", "aerozol", "damcı", "sprey", "krem"];
+            //sedef
+
+            // JSON dosyasının yolu (örneğin uygulama klasöründe Mappings/sedef.json)
+            string jsonPath = Path.Combine(Application.StartupPath, "Mappings", "sedef.json");
+
+            Dictionary<string, string> cityMappings;
+
+            if (!File.Exists(jsonPath))
+            {
+                MessageBox.Show($"JSON dosyası bulunamadı:\n{jsonPath}", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            try
+            {
+                string jsonText = File.ReadAllText(jsonPath);
+                cityMappings = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonText);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("JSON dosyası okunurken hata oluştu:\n" + ex.Message, "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            // ---- Burada totals dictionary kodda kalıyor ----
+            Dictionary<string, double> totals = new();
+
+            string[] notCities = new[]
+            {
+        "ampula", "məhlul", "gel", "tabletka", "şampun", "kapsul", "aerozol", "damcı", "sprey", "krem"
+    };
             string[] possibleMedicines = new[]
             {
-            "Aerovin", "Aksomed", "Aqneteks Forte", "Artron", "Artron A", "Biostrepta", "Buderen", "Dekspan",
-            "Dermizol-G", "Diafleks", "Efilen", "Egeron", "Elafra", "Epafor", "Eribenz", "Estilak",
-            "Flagimet", "Flaksidel", "Foligin-5", "Gera", "Hifes", "Lekart", "Mastaq gel", "Misopreks",
-            "Mukobronx", "Natamiks", "Neomezol", "Nervio B12", "Neyrotilin", "Panorin", "Panorin A", "Papil Derma",
-            "Papil-Off", "Probien", "Protesol", "Qliaton Forte", "Resalfu", "Rinoret", "Rudaza", "Senaval",
-            "Skarvis", "Spazmolizin", "Tromisin", "Ulpriks", "Uroseptin", "Vasklor", "Viotiser", "Vitokalsit", "Yenlip"
-            };
+        "Aerovin", "Aksomed", "Aqneteks Forte", "Artron", "Artron A", "Biostrepta", "Buderen", "Dekspan",
+        "Dermizol-G", "Diafleks", "Efilen", "Egeron", "Elafra", "Epafor", "Eribenz", "Estilak",
+        "Flagimet", "Flaksidel", "Foligin-5", "Gera", "Hifes", "Lekart", "Mastaq gel", "Misopreks",
+        "Mukobronx", "Natamiks", "Neomezol", "Nervio B12", "Neyrotilin", "Panorin", "Panorin A", "Papil Derma",
+        "Papil-Off", "Probien", "Protesol", "Qliaton Forte", "Resalfu", "Rinoret", "Rudaza", "Senaval",
+        "Skarvis", "Spazmolizin", "Tromisin", "Ulpriks", "Uroseptin", "Vasklor", "Viotiser", "Vitokalsit", "Yenlip"
+    };
             string[] possibleCities = new[]
             {
-             "Ağcabədi", "Ağdam", "Ağdaş", "Ağstafa", "Ağsu",
-            "Astara",
-            "Bakı", "Balakən", "Beyləqan", "Bərdə",
-            "Biləsuvar",
-            "Cəbrayıl", "Cəlilabad",
-            "Daşkəsən",
-            "Füzuli",
-            "Gədəbəy", "Gəncə", "Goranboy", "Göygöl", "Göyçay",
-            "Hacıqabul", "Hövsan",
-            "İmişli", "İsmayıllı",
-            "Kəlbəcər", "Kürdəmir",
-            "Laçın", "Lerik", "Lənkəran",
-            "Masallı", "Mingəçevir",
-            "Naftalan", "Neftçala",
-            "Oğuz",
-            "Qəbələ", "Qax", "Qazax", "Qobustan", "Quba", "Qubadlı", "Qusar",
-            "Saatlı", "Sabirabad", "Sədərək", "Salyan", "Samux", "Şabran", "Şahbuz", "Şamaxı", "Şəki", "Şəmkir", "Şərur", "Şirvan", "Siyəzən", "Sumqayıt",
-            "Tərtər", "Tovuz",
-            "Ucar",
-            "Xaçmaz", "Xızı", "Xocalı", "Xocavənd", "Xudat",
-            "Yardımlı", "Yevlax",
-            "Zaqatala", "Zəngilan", "Zərdab"
-            };
-
-            Dictionary<string, double> totals = new();
+        "Ağcabədi", "Ağdam", "Ağdaş", "Ağstafa", "Ağsu",
+        "Astara",
+        "Bakı", "Balakən", "Beyləqan", "Bərdə",
+        "Biləsuvar",
+        "Cəbrayıl", "Cəlilabad",
+        "Daşkəsən",
+        "Füzuli",
+        "Gədəbəy", "Gəncə", "Goranboy", "Göygöl", "Göyçay",
+        "Hacıqabul", "Hövsan",
+        "İmişli", "İsmayıllı",
+        "Kəlbəcər", "Kürdəmir",
+        "Laçın", "Lerik", "Lənkəran",
+        "Masallı", "Mingəçevir",
+        "Naftalan", "Neftçala",
+        "Oğuz",
+        "Qəbələ", "Qax", "Qazax", "Qobustan", "Quba", "Qubadlı", "Qusar",
+        "Saatlı", "Sabirabad", "Sədərək", "Salyan", "Samux", "Şabran", "Şahbuz", "Şamaxı", "Şəki", "Şəmkir", "Şərur", "Şirvan", "Siyəzən", "Sumqayıt",
+        "Tərtər", "Tovuz",
+        "Ucar",
+        "Xaçmaz", "Xızı", "Xocalı", "Xocavənd", "Xudat",
+        "Yardımlı", "Yevlax",
+        "Zaqatala", "Zəngilan", "Zərdab"
+    };
 
             void AddOrUpdate(string medName, string city, double count)
             {
-                if (!string.IsNullOrWhiteSpace(city))
-                    city = char.ToUpper(city[0]) + city[1..].ToLowerInvariant();
+                if (string.IsNullOrWhiteSpace(city))
+                    return;
 
-                bool isRealCity = possibleCities.Contains(city);
-                bool looksLikeNotCity = notCities.Any(f => city.ToLowerInvariant().Contains(f));
+                string normCity = NormalizeText(city);
+
+                // Şehir eşleme kontrolü JSON'dan geldiği için burada da kullanılır
+                if (cityMappings.TryGetValue(normCity, out string mappedCity))
+                {
+                    city = mappedCity;
+                }
+                else
+                {
+                    var match = cityMappings.Keys.FirstOrDefault(k => normCity.Contains(NormalizeText(k)));
+                    if (match != null)
+                        city = cityMappings[match];
+                    else
+                        city = char.ToUpper(city[0]) + city.Substring(1).ToLowerInvariant();
+                }
+
+                bool isRealCity = possibleCities.Any(c => NormalizeText(c) == NormalizeText(city));
+                bool looksLikeNotCity = notCities.Any(f => normCity.Contains(f));
 
                 if (!isRealCity && looksLikeNotCity)
                     return;
@@ -379,7 +427,6 @@ namespace ExcelOxu
                 else
                     totals[key] = count;
             }
-
 
             string NormalizeText(string text)
             {
@@ -395,7 +442,7 @@ namespace ExcelOxu
 
             var dt = new DataTable();
             dt.Columns.Add("Dərman adı", typeof(string));
-            Dictionary<string, int> medicines = [];
+            Dictionary<string, int> medicines = new();
             int lastColumn = 0;
             DataTable specialMeds = new();
             specialMeds.Columns.Add("Dərman adı", typeof(string));
@@ -487,6 +534,8 @@ namespace ExcelOxu
                     AddOrUpdate(lastMedName, location, medCount);
                 }
             }
+
+            // --- Sonraki tablo ve dosya kaydetme kısmı aynı kalıyor ---
 
             DataTable finalTable = new();
             finalTable.Columns.Add("Dərman adı", typeof(string));
@@ -587,6 +636,30 @@ namespace ExcelOxu
 
         private void button3_Click(object sender, EventArgs e)
         {
+            //azerimed
+
+
+            // JSON dosyasının yolu (örnek: uygulama klasöründe Mappings/azerimed.json)
+            string jsonPath = Path.Combine(Application.StartupPath, "Mappings", "azerimed.json");
+
+            if (!File.Exists(jsonPath))
+            {
+                MessageBox.Show($"JSON dosyası bulunamadı:\n{jsonPath}", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            Dictionary<string, string> cityMappings;
+            try
+            {
+                string jsonText = File.ReadAllText(jsonPath);
+                cityMappings = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonText);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("JSON dosyası okunurken hata oluştu:\n" + ex.Message, "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             using var ofd = new OpenFileDialog()
             {
                 Filter = "Excel Dosyaları|*.xlsx;*.xls",
@@ -623,7 +696,25 @@ namespace ExcelOxu
                 string eraziRaw = row.Cell(2).GetString();
                 string seher = Normalize(eraziRaw.Split('|')[0]);
 
-                string malAdi = Normalize(row.Cell(4).GetString()); 
+                // JSON'dan şehir eşleme (tam eşleşme)
+                if (cityMappings.TryGetValue(seher, out string mappedCity))
+                {
+                    seher = mappedCity;
+                }
+                else
+                {
+                    // Eğer tam eşleşme yoksa, içerik kontrolü ile eşleme yap
+                    foreach (var kv in cityMappings)
+                    {
+                        if (seher.Contains(kv.Key))
+                        {
+                            seher = kv.Value;
+                            break;
+                        }
+                    }
+                }
+
+                string malAdi = Normalize(row.Cell(4).GetString());
 
                 double miqdar = 0;
                 double.TryParse(row.Cell(7).GetValue<string>(), out miqdar);
@@ -655,8 +746,8 @@ namespace ExcelOxu
 
                 for (int colIndex = 0; colIndex < allCities.Count; colIndex++)
                 {
-                    string seher = allCities[colIndex];
-                    double value = pivot[mal].ContainsKey(seher) ? pivot[mal][seher] : 0;
+                    string city = allCities[colIndex];
+                    double value = pivot[mal].ContainsKey(city) ? pivot[mal][city] : 0;
                     newWs.Cell(rowIndex, colIndex + 2).Value = value;
                 }
 
@@ -669,9 +760,316 @@ namespace ExcelOxu
                 Title = "Nəticəni Excel olaraq Yadda Saxla",
                 FileName = "AzerimedSatish_Hesabati_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".xlsx"
             })
-
+            {
                 if (sfd.ShowDialog() == DialogResult.OK)
-                newWb.SaveAs(sfd.FileName);
+                    newWb.SaveAs(sfd.FileName);
+            }
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            // Normalize Med Name
+            string NormalizeMedName(string raw)
+            {
+                int lastStart = raw.LastIndexOf("(");
+                int lastEnd = raw.LastIndexOf(")");
+                if (lastStart >= 0 && lastEnd > lastStart)
+                    raw = raw.Remove(lastStart, lastEnd - lastStart + 1);
+
+                if (raw.Contains("№"))
+                {
+                    raw = raw.Substring(0, raw.IndexOf("№")).Trim();
+                }
+
+                return raw.Trim().ToLowerInvariant();
+            }
+
+            // Normalize text for city name matching
+            string NormalizeText(string text)
+            {
+                return text.ToLowerInvariant()
+                    .Replace("ə", "e")
+                    .Replace("ı", "i")
+                    .Replace("ö", "o")
+                    .Replace("ü", "u")
+                    .Replace("ç", "c")
+                    .Replace("ş", "s")
+                    .Replace("ğ", "g");
+            }
+
+            // JSON mapping dosyasını oku
+            string mappingJsonPath = Path.Combine(Application.StartupPath, "mappings", "zeytun.json");
+            Dictionary<string, string> cityMappings = new Dictionary<string, string>();
+
+            if (File.Exists(mappingJsonPath))
+            {
+                var jsonText = File.ReadAllText(mappingJsonPath);
+                cityMappings = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonText);
+                cityMappings = cityMappings.ToDictionary(kvp => NormalizeText(kvp.Key), kvp => kvp.Value);
+            }
+            else
+            {
+                MessageBox.Show("Mapping dosyası bulunamadı: " + mappingJsonPath, "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            using var ofd = new OpenFileDialog()
+            {
+                Filter = "Excel Dosyaları|*.xlsx;*.xls",
+                Title = "Zeytun excel faylını seçin"
+            };
+
+            if (ofd.ShowDialog() != DialogResult.OK)
+                return;
+
+            using var wb = new XLWorkbook(ofd.FileName);
+            var ws = wb.Worksheet(1);
+
+            var dt = new DataTable();
+            dt.Columns.Add("Dərman adı", typeof(string));
+            Dictionary<string, int> medicines = new Dictionary<string, int>();
+            int lastColumn = 0;
+            bool isSpecial = false;
+            DataTable specialMeds = new DataTable();
+            specialMeds.Columns.Add("Dərman adı", typeof(string));
+            specialMeds.Columns.Add("Şəhər və ya Filial", typeof(string));
+            specialMeds.Columns.Add("Say", typeof(double));
+            string lastBranchName = "";
+            string lastMedName = "";
+
+            foreach (var row in ws.RowsUsed())
+            {
+                int outline = row.OutlineLevel;
+
+                // Filial adını yakala
+                for (int i = 1; i <= 5; i++)
+                {
+                    var val = row.Cell(i).GetString().Trim();
+                    if (!string.IsNullOrEmpty(val) && val.ToLower().Contains("filial"))
+                    {
+                        lastBranchName = val;
+                        break;
+                    }
+                }
+
+                if (string.IsNullOrWhiteSpace(lastBranchName))
+                    lastBranchName = "Bilinməyən Filial";
+
+                if (outline == 1)
+                {
+                    string cityNameRaw = row.Cell(2).GetString().Trim();
+                    string normalizedCity = NormalizeText(cityNameRaw);
+                    string cityName;
+
+                    if (cityMappings.TryGetValue(normalizedCity, out var mappedCity))
+                    {
+                        cityName = mappedCity;
+                    }
+                    else
+                    {
+                        cityName = cityNameRaw;
+                    }
+
+                    if (cityName.Contains("Şəxsi apteklər"))
+                    {
+                        isSpecial = true;
+                    }
+                    else
+                    {
+                        if (!dt.Columns.Contains(cityName))
+                        {
+                            dt.Columns.Add(cityName, typeof(double));
+                        }
+                        lastColumn = dt.Columns.IndexOf(cityName);
+                        isSpecial = false;
+                    }
+                }
+                else if (outline == 2)
+                {
+                    string medNameRaw = row.Cell(2).GetString().Trim();
+
+                    if (isSpecial)
+                    {
+                        lastMedName = medNameRaw;
+
+                        double medCountSpecial = row.Cell(3).GetValue<double?>() ?? 0;
+                        if (medCountSpecial != 0)
+                        {
+                            var newRow = specialMeds.NewRow();
+                            newRow["Dərman adı"] = NormalizeMedName(medNameRaw);
+                            newRow["Şəhər və ya Filial"] = lastBranchName;
+                            newRow["Say"] = medCountSpecial;
+                            specialMeds.Rows.Add(newRow);
+                        }
+                        continue;
+                    }
+
+                    string medName = NormalizeMedName(medNameRaw);
+                    double medCount = row.Cell(3).GetValue<double?>() ?? 0;
+
+                    if (!medicines.ContainsKey(medName))
+                    {
+                        var dataRow = dt.NewRow();
+                        dataRow[0] = medName;
+                        for (int i = 1; i < dt.Columns.Count; i++)
+                            dataRow[i] = 0;
+
+                        dataRow[lastColumn] = medCount;
+                        dt.Rows.Add(dataRow);
+                        medicines.Add(medName, dt.Rows.Count - 1);
+                    }
+                    else
+                    {
+                        var dr = dt.Rows[medicines[medName]];
+                        double currentVal = double.TryParse(dr[lastColumn]?.ToString(), out var cur) ? cur : 0;
+                        dr[lastColumn] = currentVal + medCount;
+                    }
+                }
+            }
+
+            DataTable finalTable = new DataTable();
+            finalTable.Columns.Add("Dərman adı", typeof(string));
+            finalTable.Columns.Add("Şəhər və ya Filial", typeof(string));
+            finalTable.Columns.Add("Say", typeof(double));
+
+            string[] notCities = new[] { "ampula", "məhlul", "gel", "tabletka", "şampun", "kapsul", "aerozol", "damcı", "sprey", "krem" };
+            Dictionary<string, double> totals = new Dictionary<string, double>();
+
+            void AddOrUpdate(string medName, string city, double count)
+            {
+                if (!string.IsNullOrWhiteSpace(city))
+                    city = char.ToUpper(city[0]) + city[1..].ToLowerInvariant();
+
+                if (string.IsNullOrWhiteSpace(city) || notCities.Any(f => city.ToLowerInvariant().Contains(f)))
+                    return;
+
+                string key = $"{medName.ToLowerInvariant()}|{city.ToLowerInvariant()}";
+                if (totals.ContainsKey(key))
+                    totals[key] += count;
+                else
+                    totals[key] = count;
+            }
+
+            foreach (DataRow dr in dt.Rows)
+            {
+                string medName = dr[0].ToString();
+                for (int i = 1; i < dt.Columns.Count; i++)
+                {
+                    string city = dt.Columns[i].ColumnName;
+                    double count = double.TryParse(dr[i]?.ToString(), out var c) ? c : 0;
+                    if (count != 0)
+                        AddOrUpdate(medName, city, count);
+                }
+            }
+
+            foreach (DataRow dr in specialMeds.Rows)
+            {
+                string medName = dr[0].ToString();
+                string city = dr[1].ToString();
+                double count = double.TryParse(dr[2]?.ToString(), out var c) ? c : 0;
+                if (count != 0)
+                    AddOrUpdate(medName, city, count);
+            }
+
+            foreach (var kvp in totals)
+            {
+                var parts = kvp.Key.Split('|');
+                var row = finalTable.NewRow();
+                row["Dərman adı"] = parts[0];
+                row["Şəhər və ya Filial"] = parts[1];
+                row["Say"] = kvp.Value;
+                finalTable.Rows.Add(row);
+            }
+
+            DataTable pivotTable = new DataTable();
+            pivotTable.Columns.Add("Dərman adı", typeof(string));
+
+            var uniqueLocations = finalTable.AsEnumerable()
+                .Select(r => r.Field<string>("Şəhər və ya Filial"))
+                .Distinct()
+                .OrderBy(c => c)
+                .ToList();
+
+            foreach (var location in uniqueLocations)
+                pivotTable.Columns.Add(location, typeof(double));
+
+            var uniqueMeds = finalTable.AsEnumerable()
+                .Select(r => r.Field<string>("Dərman adı"))
+                .Distinct()
+                .OrderBy(m => m)
+                .ToList();
+
+            foreach (var med in uniqueMeds)
+            {
+                var newRow = pivotTable.NewRow();
+                newRow["Dərman adı"] = med;
+
+                foreach (var location in uniqueLocations)
+                {
+                    var match = finalTable.AsEnumerable()
+                        .FirstOrDefault(r => r.Field<string>("Dərman adı") == med && r.Field<string>("Şəhər və ya Filial") == location);
+
+                    newRow[location] = match != null ? match.Field<double>("Say") : 0;
+                }
+
+                pivotTable.Rows.Add(newRow);
+            }
+
+            using (var sfd = new SaveFileDialog
+            {
+                Filter = "Excel Dosyası (*.xlsx)|*.xlsx",
+                Title = "Nəticəni Excel olaraq Yadda Saxla",
+                FileName = "ZeytunSatish_Hesabati_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".xlsx"
+            })
+            {
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    using var saveWb = new XLWorkbook();
+                    var ws1 = saveWb.Worksheets.Add("Pivot_Hesabatı");
+
+                    for (int c = 0; c < pivotTable.Columns.Count; c++)
+                    {
+                        ws1.Cell(1, c + 1).Value = pivotTable.Columns[c].ColumnName;
+                    }
+
+                    for (int r = 0; r < pivotTable.Rows.Count; r++)
+                    {
+                        for (int c = 0; c < pivotTable.Columns.Count; c++)
+                        {
+                            var cell = ws1.Cell(r + 2, c + 1);
+                            var value = pivotTable.Rows[r][c];
+
+                            if (value is double d)
+                            {
+                                cell.Value = d;
+                            }
+                            else
+                            {
+                                cell.Value = value?.ToString() ?? "";
+                            }
+                        }
+                    }
+
+                    ws1.Columns().AdjustToContents();
+                    saveWb.SaveAs(sfd.FileName);
+
+                    MessageBox.Show(
+                        "Nəticə saxlanıldı:\n" + sfd.FileName,
+                        "Uğurlu",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information
+                    );
+                }
+            }
+
+            dataGridView1.DataSource = pivotTable;
+            dataGridView1.Visible = false;
+            dataGridView1.SendToBack();
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            //avromed dokta
         }
     }
 }

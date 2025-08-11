@@ -12,8 +12,8 @@
       }
     ],
     "additionalProbingPaths": [
-      "C:\\Users\\Victus\\.dotnet\\store\\|arch|\\|tfm|",
-      "C:\\Users\\Victus\\.nuget\\packages",
+      "C:\\Users\\xaqan\\.dotnet\\store\\|arch|\\|tfm|",
+      "C:\\Users\\xaqan\\.nuget\\packages",
       "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
     ],
     "configProperties": {

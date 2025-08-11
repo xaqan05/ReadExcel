@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Victus\\Desktop\\ReadExcel\\ExcelOxu\\ExcelOxu.csproj": {}
+    "C:\\Users\\xaqan\\Desktop\\ReadExcel\\ExcelOxu\\ExcelOxu.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Victus\\Desktop\\ReadExcel\\ExcelOxu\\ExcelOxu.csproj": {
+    "C:\\Users\\xaqan\\Desktop\\ReadExcel\\ExcelOxu\\ExcelOxu.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Victus\\Desktop\\ReadExcel\\ExcelOxu\\ExcelOxu.csproj",
+        "projectUniqueName": "C:\\Users\\xaqan\\Desktop\\ReadExcel\\ExcelOxu\\ExcelOxu.csproj",
         "projectName": "ExcelOxu",
-        "projectPath": "C:\\Users\\Victus\\Desktop\\ReadExcel\\ExcelOxu\\ExcelOxu.csproj",
-        "packagesPath": "C:\\Users\\Victus\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Victus\\Desktop\\ReadExcel\\ExcelOxu\\obj\\",
+        "projectPath": "C:\\Users\\xaqan\\Desktop\\ReadExcel\\ExcelOxu\\ExcelOxu.csproj",
+        "packagesPath": "C:\\Users\\xaqan\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\xaqan\\Desktop\\ReadExcel\\ExcelOxu\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Victus\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\xaqan\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -26,6 +26,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -53,6 +54,10 @@
             "ClosedXML": {
               "target": "Package",
               "version": "[0.105.0, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.3, )"
             }
           },
           "imports": [
@@ -74,7 +79,7 @@
               "privateAssets": "none"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.302/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

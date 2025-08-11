@@ -33,17 +33,19 @@
             dataGridView1 = new DataGridView();
             button2 = new Button();
             button3 = new Button();
+            button4 = new Button();
+            button5 = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
             // button1
             // 
-            button1.Location = new Point(40, 42);
+            button1.Location = new Point(31, 42);
             button1.Margin = new Padding(3, 4, 3, 4);
             button1.Name = "button1";
             button1.Size = new Size(192, 44);
             button1.TabIndex = 0;
-            button1.Text = "Avromed Region || Zeytun";
+            button1.Text = "Avromed Region";
             button1.UseVisualStyleBackColor = true;
             button1.Click += button1_Click;
             // 
@@ -62,7 +64,7 @@
             // 
             // button2
             // 
-            button2.Location = new Point(265, 42);
+            button2.Location = new Point(229, 42);
             button2.Margin = new Padding(3, 4, 3, 4);
             button2.Name = "button2";
             button2.Size = new Size(192, 44);
@@ -73,7 +75,7 @@
             // 
             // button3
             // 
-            button3.Location = new Point(508, 42);
+            button3.Location = new Point(427, 42);
             button3.Margin = new Padding(3, 4, 3, 4);
             button3.Name = "button3";
             button3.Size = new Size(192, 44);
@@ -82,11 +84,35 @@
             button3.UseVisualStyleBackColor = true;
             button3.Click += button3_Click;
             // 
+            // button4
+            // 
+            button4.Location = new Point(31, 106);
+            button4.Margin = new Padding(3, 4, 3, 4);
+            button4.Name = "button4";
+            button4.Size = new Size(192, 44);
+            button4.TabIndex = 4;
+            button4.Text = "Zeytun";
+            button4.UseVisualStyleBackColor = true;
+            button4.Click += button4_Click;
+            // 
+            // button5
+            // 
+            button5.Location = new Point(229, 106);
+            button5.Margin = new Padding(3, 4, 3, 4);
+            button5.Name = "button5";
+            button5.Size = new Size(192, 44);
+            button5.TabIndex = 5;
+            button5.Text = "Avromed Dokta";
+            button5.UseVisualStyleBackColor = true;
+            button5.Click += button5_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(735, 112);
+            ClientSize = new Size(633, 201);
+            Controls.Add(button5);
+            Controls.Add(button4);
             Controls.Add(button3);
             Controls.Add(button2);
             Controls.Add(dataGridView1);
@@ -105,5 +131,7 @@
         private DataGridView dataGridView1;
         private Button button2;
         private Button button3;
+        private Button button4;
+        private Button button5;
     }
 }
