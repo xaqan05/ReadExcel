@@ -1,6 +1,7 @@
 ﻿using ClosedXML.Excel;
-using System.Data;
 using Newtonsoft.Json;
+using System.Data;
+using System.Text.RegularExpressions;
 
 namespace ExcelOxu
 {
@@ -768,6 +769,8 @@ namespace ExcelOxu
 
         private void button4_Click(object sender, EventArgs e)
         {
+            //zeytun aptek
+
             // Normalize Med Name
             string NormalizeMedName(string raw)
             {
@@ -1070,6 +1073,145 @@ namespace ExcelOxu
         private void button5_Click(object sender, EventArgs e)
         {
             //avromed dokta
+            // JSON mapping faylının yolu
+            string jsonPath = Path.Combine(Application.StartupPath, "Mappings", "radezrehim.json");
+
+            if (!File.Exists(jsonPath))
+            {
+                MessageBox.Show($"JSON dosyası tapılmadı:\n{jsonPath}", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            Dictionary<string, string> cityMappings;
+            try
+            {
+                string jsonText = File.ReadAllText(jsonPath);
+                cityMappings = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonText);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("JSON oxunarkən xəta:\n" + ex.Message, "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            using var ofd = new OpenFileDialog()
+            {
+                Filter = "Excel Dosyaları|*.xlsx;*.xls",
+                Title = "Excel Faylını Seç"
+            };
+
+            if (ofd.ShowDialog() != DialogResult.OK)
+                return;
+
+            using var wb = new XLWorkbook(ofd.FileName);
+            var ws = wb.Worksheet(1);
+
+            // Yeni normalize fonksiyonu: karakterleri ve birden fazla boşluğu temizler
+            string Normalize(string input)
+            {
+                if (string.IsNullOrEmpty(input))
+                    return string.Empty;
+
+                // Birden fazla boşluğu tek boşluğa indirmek için Regex kullan
+                string trimmed = Regex.Replace(input.Trim(), @"\s+", " ");
+
+                return trimmed.ToLower()
+                    .Replace("ə", "e")
+                    .Replace("ı", "i")
+                    .Replace("ö", "o")
+                    .Replace("ü", "u")
+                    .Replace("ç", "c")
+                    .Replace("ş", "s")
+                    .Replace("ğ", "g");
+            }
+
+            // JSON anahtarlarını önceden normalize edip yeni bir sözlüğe kaydediyoruz
+            var normalizedCityMappings = new Dictionary<string, string>();
+            foreach (var kv in cityMappings)
+            {
+                normalizedCityMappings[Normalize(kv.Key)] = kv.Value;
+            }
+
+            var pivot = new Dictionary<string, Dictionary<string, double>>();
+
+            int firstRow = ws.FirstRowUsed().RowNumber() + 1; // başlıqdan sonrakı sətir
+            int lastRow = ws.LastRowUsed().RowNumber();
+
+            for (int rowNum = firstRow; rowNum <= lastRow; rowNum++)
+            {
+                var row = ws.Row(rowNum);
+
+                string musteriRaw = row.Cell(5).GetString(); // Müştəri (aptek adı)
+                string normalizedMusteri = Normalize(musteriRaw);
+
+                string seher = musteriRaw; // default olaraq orijinal
+
+                // Normalize edilmiş JSON anahtarlarıyla karşılaştırma yap
+                if (normalizedCityMappings.ContainsKey(normalizedMusteri))
+                {
+                    seher = normalizedCityMappings[normalizedMusteri];
+                }
+                else
+                {
+                    // Eğer tam eşleşme yoksa, contains metoduyla arama yap
+                    foreach (var kv in normalizedCityMappings)
+                    {
+                        if (normalizedMusteri.Contains(kv.Key))
+                        {
+                            seher = kv.Value;
+                            break;
+                        }
+                    }
+                }
+
+                string malAdi = Normalize(row.Cell(3).GetString()); // Preparat
+                double miqdar = 0;
+                double.TryParse(row.Cell(6).GetValue<string>(), out miqdar);
+
+                if (!pivot.ContainsKey(malAdi))
+                    pivot[malAdi] = new Dictionary<string, double>();
+
+                if (!pivot[malAdi].ContainsKey(seher))
+                    pivot[malAdi][seher] = 0;
+
+                pivot[malAdi][seher] += miqdar;
+            }
+
+            // Yeni Excel faylı yaradılır
+            using var newWb = new XLWorkbook();
+            var newWs = newWb.Worksheets.Add("Pivot");
+
+            var allCities = pivot.SelectMany(p => p.Value.Keys).Distinct().OrderBy(x => x).ToList();
+
+            // başlıqlar (şəhərlər)
+            for (int i = 0; i < allCities.Count; i++)
+                newWs.Cell(1, i + 2).Value = allCities[i];
+
+            int rowIndex = 2;
+            foreach (var mal in pivot.Keys.OrderBy(x => x))
+            {
+                newWs.Cell(rowIndex, 1).Value = mal;
+
+                for (int colIndex = 0; colIndex < allCities.Count; colIndex++)
+                {
+                    string city = allCities[colIndex];
+                    double value = pivot[mal].ContainsKey(city) ? pivot[mal][city] : 0;
+                    newWs.Cell(rowIndex, colIndex + 2).Value = value;
+                }
+
+                rowIndex++;
+            }
+
+            using (var sfd = new SaveFileDialog
+            {
+                Filter = "Excel Dosyası (*.xlsx)|*.xlsx",
+                Title = "Nəticəni Excel olaraq Yadda Saxla",
+                FileName = "RadezRehimSatishHesabati" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".xlsx"
+            })
+            {
+                if (sfd.ShowDialog() == DialogResult.OK)
+                    newWb.SaveAs(sfd.FileName);
+            }
         }
-    }
+    } 
 }
