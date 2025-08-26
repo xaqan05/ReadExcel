@@ -1,4 +1,5 @@
 ﻿using ClosedXML.Excel;
+using DocumentFormat.OpenXml.Wordprocessing;
 using Newtonsoft.Json;
 using System.Data;
 using System.Text.RegularExpressions;
@@ -11,8 +12,6 @@ namespace ExcelOxu
         {
             InitializeComponent();
         }
-
-
         private void button1_Click(object sender, EventArgs e)
         {
             //avromed region
@@ -326,7 +325,6 @@ namespace ExcelOxu
             dataGridView1.Visible = false;
             dataGridView1.SendToBack();
         }
-
         private void button2_Click(object sender, EventArgs e)
         {
             //sedef
@@ -358,42 +356,42 @@ namespace ExcelOxu
 
             string[] notCities = new[]
             {
-        "ampula", "məhlul", "gel", "tabletka", "şampun", "kapsul", "aerozol", "damcı", "sprey", "krem"
-    };
+                "ampula", "məhlul", "gel", "tabletka", "şampun", "kapsul", "aerozol", "damcı", "sprey", "krem"
+            };
             string[] possibleMedicines = new[]
             {
-        "Aerovin", "Aksomed", "Aqneteks Forte", "Artron", "Artron A", "Biostrepta", "Buderen", "Dekspan",
-        "Dermizol-G", "Diafleks", "Efilen", "Egeron", "Elafra", "Epafor", "Eribenz", "Estilak",
-        "Flagimet", "Flaksidel", "Foligin-5", "Gera", "Hifes", "Lekart", "Mastaq gel", "Misopreks",
-        "Mukobronx", "Natamiks", "Neomezol", "Nervio B12", "Neyrotilin", "Panorin", "Panorin A", "Papil Derma",
-        "Papil-Off", "Probien", "Protesol", "Qliaton Forte", "Resalfu", "Rinoret", "Rudaza", "Senaval",
-        "Skarvis", "Spazmolizin", "Tromisin", "Ulpriks", "Uroseptin", "Vasklor", "Viotiser", "Vitokalsit", "Yenlip"
-    };
+                "Aerovin", "Aksomed", "Aqneteks Forte", "Artron", "Artron A", "Biostrepta", "Buderen", "Dekspan",
+                "Dermizol-G", "Diafleks", "Efilen", "Egeron", "Elafra", "Epafor", "Eribenz", "Estilak",
+                "Flagimet", "Flaksidel", "Foligin-5", "Gera", "Hifes", "Lekart", "Mastaq gel", "Misopreks",
+                "Mukobronx", "Natamiks", "Neomezol", "Nervio B12", "Neyrotilin", "Panorin", "Panorin A", "Papil Derma",
+                "Papil-Off", "Probien", "Protesol", "Qliaton Forte", "Resalfu", "Rinoret", "Rudaza", "Senaval",
+                "Skarvis", "Spazmolizin", "Tromisin", "Ulpriks", "Uroseptin", "Vasklor", "Viotiser", "Vitokalsit", "Yenlip"
+            };
             string[] possibleCities = new[]
             {
-        "Ağcabədi", "Ağdam", "Ağdaş", "Ağstafa", "Ağsu",
-        "Astara",
-        "Bakı", "Balakən", "Beyləqan", "Bərdə",
-        "Biləsuvar",
-        "Cəbrayıl", "Cəlilabad",
-        "Daşkəsən",
-        "Füzuli",
-        "Gədəbəy", "Gəncə", "Goranboy", "Göygöl", "Göyçay",
-        "Hacıqabul", "Hövsan",
-        "İmişli", "İsmayıllı",
-        "Kəlbəcər", "Kürdəmir",
-        "Laçın", "Lerik", "Lənkəran",
-        "Masallı", "Mingəçevir",
-        "Naftalan", "Neftçala",
-        "Oğuz",
-        "Qəbələ", "Qax", "Qazax", "Qobustan", "Quba", "Qubadlı", "Qusar",
-        "Saatlı", "Sabirabad", "Sədərək", "Salyan", "Samux", "Şabran", "Şahbuz", "Şamaxı", "Şəki", "Şəmkir", "Şərur", "Şirvan", "Siyəzən", "Sumqayıt",
-        "Tərtər", "Tovuz",
-        "Ucar",
-        "Xaçmaz", "Xızı", "Xocalı", "Xocavənd", "Xudat",
-        "Yardımlı", "Yevlax",
-        "Zaqatala", "Zəngilan", "Zərdab"
-    };
+                "Ağcabədi", "Ağdam", "Ağdaş", "Ağstafa", "Ağsu",
+                "Astara",
+                "Bakı", "Balakən", "Beyləqan", "Bərdə",
+                "Biləsuvar",
+                "Cəbrayıl", "Cəlilabad",
+                "Daşkəsən",
+                "Füzuli",
+                "Gədəbəy", "Gəncə", "Goranboy", "Göygöl", "Göyçay",
+                "Hacıqabul", "Hövsan",
+                "İmişli", "İsmayıllı",
+                "Kəlbəcər", "Kürdəmir",
+                "Laçın", "Lerik", "Lənkəran",
+                "Masallı", "Mingəçevir",
+                "Naftalan", "Neftçala",
+                "Oğuz",
+                "Qəbələ", "Qax", "Qazax", "Qobustan", "Quba", "Qubadlı", "Qusar",
+                "Saatlı", "Sabirabad", "Sədərək", "Salyan", "Samux", "Şabran", "Şahbuz", "Şamaxı", "Şəki", "Şəmkir", "Şərur", "Şirvan", "Siyəzən", "Sumqayıt",
+                "Tərtər", "Tovuz",
+                "Ucar",
+                "Xaçmaz", "Xızı", "Xocalı", "Xocavənd", "Xudat",
+                "Yardımlı", "Yevlax",
+                "Zaqatala", "Zəngilan", "Zərdab"
+            };
 
             void AddOrUpdate(string medName, string city, double count)
             {
@@ -634,7 +632,6 @@ namespace ExcelOxu
                 }
             }
         }
-
         private void button3_Click(object sender, EventArgs e)
         {
             //azerimed
@@ -716,6 +713,12 @@ namespace ExcelOxu
                 }
 
                 string malAdi = Normalize(row.Cell(4).GetString());
+                
+                if (malAdi.Contains("AEROMAX 50ml"))
+                {
+                    malAdi = "Aeromax";
+                }
+                    
 
                 double miqdar = 0;
                 double.TryParse(row.Cell(7).GetValue<string>(), out miqdar);
@@ -764,9 +767,15 @@ namespace ExcelOxu
             {
                 if (sfd.ShowDialog() == DialogResult.OK)
                     newWb.SaveAs(sfd.FileName);
+
+                MessageBox.Show(
+                    "Nəticə saxlanıldı:\n" + sfd.FileName,
+                    "Uğurlu",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information
+                );
             }
         }
-
         private void button4_Click(object sender, EventArgs e)
         {
             //zeytun aptek
@@ -1069,10 +1078,9 @@ namespace ExcelOxu
             dataGridView1.Visible = false;
             dataGridView1.SendToBack();
         }
-
         private void button5_Click(object sender, EventArgs e)
         {
-            //avromed dokta
+            //radez rehim
             // JSON mapping faylının yolu
             string jsonPath = Path.Combine(Application.StartupPath, "Mappings", "radezrehim.json");
 
@@ -1211,7 +1219,156 @@ namespace ExcelOxu
             {
                 if (sfd.ShowDialog() == DialogResult.OK)
                     newWb.SaveAs(sfd.FileName);
+
+                MessageBox.Show(
+                        "Nəticə saxlanıldı:\n" + sfd.FileName,
+                        "Uğurlu",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information
+                    );
             }
         }
-    } 
+        private void button6_Click(object sender, EventArgs e)
+        {
+
+            //sonar
+
+            // JSON mapping faylının yolu
+            string jsonPath = Path.Combine(Application.StartupPath, "Mappings", "sonar.json");
+
+            if (!File.Exists(jsonPath))
+            {
+                MessageBox.Show($"JSON faylı tapılmadı:\n{jsonPath}", "Xəta", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            Dictionary<string, string> cityMappings;
+            try
+            {
+                string jsonText = File.ReadAllText(jsonPath);
+                cityMappings = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonText);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("JSON oxunarkən xəta:\n" + ex.Message, "Xəta", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            using var ofd = new OpenFileDialog()
+            {
+                Filter = "Excel Dosyaları|*.xlsx;*.xls",
+                Title = "Excel Faylını Seç"
+            };
+
+            if (ofd.ShowDialog() != DialogResult.OK)
+                return;
+
+            using var wb = new XLWorkbook(ofd.FileName);
+            var ws = wb.Worksheet(1);
+
+            string Normalize(string input)
+            {
+                if (string.IsNullOrEmpty(input))
+                    return string.Empty;
+                string trimmed = Regex.Replace(input.Trim(), @"\s+", " ");
+                return trimmed.ToLower()
+                    .Replace("ə", "e").Replace("ı", "i").Replace("ö", "o")
+                    .Replace("ü", "u").Replace("ç", "c").Replace("ş", "s").Replace("ğ", "g");
+            }
+
+            var normalizedCityMappings = new Dictionary<string, string>();
+            foreach (var kv in cityMappings)
+            {
+                normalizedCityMappings[Normalize(kv.Key)] = kv.Value;
+            }
+
+            var pivot = new Dictionary<string, Dictionary<string, double>>();
+
+            var firstRow = ws.FirstRowUsed();
+            var libartCol = firstRow.CellsUsed().FirstOrDefault(c => Normalize(c.Value.ToString()) == "libart")?.Address.ColumnNumber;
+            var cityCol = firstRow.CellsUsed().FirstOrDefault(c => Normalize(c.Value.ToString()) == "city")?.Address.ColumnNumber;
+            var quanCol = firstRow.CellsUsed().FirstOrDefault(c => Normalize(c.Value.ToString()) == "quan")?.Address.ColumnNumber;
+
+            // Yalnız city, libart ve quan sütunlarını istifadə edirik
+            if (libartCol == null || cityCol == null || quanCol == null)
+            {
+                MessageBox.Show("Lazımi sütunlar (libart, city, quan) tapılmadı.", "Xəta", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            int firstDataRow = firstRow.RowNumber() + 1;
+            int lastDataRow = ws.LastRowUsed().RowNumber();
+
+            for (int rowNum = firstDataRow; rowNum <= lastDataRow; rowNum++)
+            {
+                var row = ws.Row(rowNum);
+
+                string libart = row.Cell(libartCol.Value).GetString();
+                string cityRaw = row.Cell(cityCol.Value).GetString();
+                double quan = 0;
+                double.TryParse(row.Cell(quanCol.Value).GetValue<string>(), out quan);
+
+                string normalizedCity = Normalize(cityRaw);
+                string finalCity = cityRaw;
+
+                // "city" sütunundakı dəyəri JSON mappinginə uyğunlaşdırırıq
+                if (normalizedCityMappings.ContainsKey(normalizedCity))
+                {
+                    finalCity = normalizedCityMappings[normalizedCity];
+                }
+
+                // Digər şəhərlər (masazir, berde və s.) üçün ayrı mappinglər əlavə edə bilərsiniz
+                if (!pivot.ContainsKey(libart))
+                    pivot[libart] = new Dictionary<string, double>();
+
+                if (!pivot[libart].ContainsKey(finalCity))
+                    pivot[libart][finalCity] = 0;
+
+                pivot[libart][finalCity] += quan;
+            }
+
+            // Yeni Excel faylı yaradılır
+            using var newWb = new XLWorkbook();
+            var newWs = newWb.Worksheets.Add("Pivot");
+
+            var allCities = pivot.SelectMany(p => p.Value.Keys).Distinct().OrderBy(x => x).ToList();
+
+            newWs.Cell(1, 1).Value = "libart";
+            for (int i = 0; i < allCities.Count; i++)
+                newWs.Cell(1, i + 2).Value = allCities[i];
+
+            int rowIndex = 2;
+            foreach (var mal in pivot.Keys.OrderBy(x => x))
+            {
+                newWs.Cell(rowIndex, 1).Value = mal;
+
+                for (int colIndex = 0; colIndex < allCities.Count; colIndex++)
+                {
+                    string city = allCities[colIndex];
+                    double value = pivot[mal].ContainsKey(city) ? pivot[mal][city] : 0;
+                    newWs.Cell(rowIndex, colIndex + 2).Value = value;
+                }
+
+                rowIndex++;
+            }
+
+            using (var sfd = new SaveFileDialog
+            {
+                Filter = "Excel Dosyası (*.xlsx)|*.xlsx",
+                Title = "Nəticəni Excel olaraq Yadda Saxla",
+                FileName = "SonarElnurSatishHesabati" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".xlsx"
+            })
+            {
+                if (sfd.ShowDialog() == DialogResult.OK)
+                    newWb.SaveAs(sfd.FileName);
+
+                MessageBox.Show(
+                        "Nəticə saxlanıldı:\n" + sfd.FileName,
+                        "Uğurlu",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information
+                    );
+            }
+        }
+    }
 }
