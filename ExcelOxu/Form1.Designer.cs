@@ -36,6 +36,7 @@
             button4 = new Button();
             button5 = new Button();
             button6 = new Button();
+            button7 = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
@@ -46,7 +47,7 @@
             button1.Name = "button1";
             button1.Size = new Size(192, 44);
             button1.TabIndex = 0;
-            button1.Text = "Avromed Region";
+            button1.Text = "Avromed Tam";
             button1.UseVisualStyleBackColor = true;
             button1.Click += button1_Click;
             // 
@@ -118,11 +119,18 @@
             button6.UseVisualStyleBackColor = true;
             button6.Click += button6_Click;
             // 
+            // button7
+            // 
+            button7.Location = new Point(0, 0);
+            button7.Name = "button7";
+            button7.Size = new Size(75, 23);
+            button7.TabIndex = 0;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(644, 174);
+            ClientSize = new Size(674, 176);
             Controls.Add(button6);
             Controls.Add(button5);
             Controls.Add(button4);
@@ -147,5 +155,6 @@
         private Button button4;
         private Button button5;
         private Button button6;
+        private Button button7;
     }
 }

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\xaqan\\Desktop\\ReadExcel\\ExcelOxu\\ExcelOxu.csproj": {}
+    "C:\\Users\\xaqan\\Desktop\\Programming\\ReadExcel\\ExcelOxu\\ExcelOxu.csproj": {}
   },
   "projects": {
-    "C:\\Users\\xaqan\\Desktop\\ReadExcel\\ExcelOxu\\ExcelOxu.csproj": {
+    "C:\\Users\\xaqan\\Desktop\\Programming\\ReadExcel\\ExcelOxu\\ExcelOxu.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\xaqan\\Desktop\\ReadExcel\\ExcelOxu\\ExcelOxu.csproj",
+        "projectUniqueName": "C:\\Users\\xaqan\\Desktop\\Programming\\ReadExcel\\ExcelOxu\\ExcelOxu.csproj",
         "projectName": "ExcelOxu",
-        "projectPath": "C:\\Users\\xaqan\\Desktop\\ReadExcel\\ExcelOxu\\ExcelOxu.csproj",
+        "projectPath": "C:\\Users\\xaqan\\Desktop\\Programming\\ReadExcel\\ExcelOxu\\ExcelOxu.csproj",
         "packagesPath": "C:\\Users\\xaqan\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\xaqan\\Desktop\\ReadExcel\\ExcelOxu\\obj\\",
+        "outputPath": "C:\\Users\\xaqan\\Desktop\\Programming\\ReadExcel\\ExcelOxu\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
