@@ -340,7 +340,6 @@ namespace ExcelOxu
 
             string[] possibleCities = new[]
             {
-        "Gəncə",
         "Sumqayıt",
         "Mingəçevir",
         "Lənkəran",
@@ -362,6 +361,7 @@ namespace ExcelOxu
         "Cəlilabad",
         "Daşkəsən",
         "Füzuli",
+        "Gəncə",
         "Gədəbəy",
         "Goranboy",
         "Göyçay",
@@ -593,15 +593,14 @@ namespace ExcelOxu
     "Flagimet", "Flaksidel", "Foligin-5", "Gera", "Hifes", "Ginestil Lavanda", "Ginestil",
     "Klindabioks", "Lekart", "Mastaq gel", "Mukobronx", "Natamiks", "Neomezol", "Nervio B12",
     "Neyrotilin", "Panorin", "Panorin A", "Papil Derma", "Papil-Off", "Probien", "Proktotrombin",
-    "Protesol", "Psilomusil", "Qliaton Forte", "Resalfu", "Rinoret", "Rumalon", "Rudaza", "Senaval",
+    "Protesol", "Psilomusil", "Qliaton Forte","Resalfu 25/125", "Resalfu 25/250","Rinoret", "Rumalon", "Rudaza", "Senaval",
     "Serfunal", "Soludazol", "Spazmolizin", "Tromisin", "Ulpriks", "Uroseptin", "Vasklor",
     "Viotiser", "Vitokalsit", "Yenlip",
-    
-    // Daha Önce Eklenenler
     "Biostrepta", "Profideks",
-    
-    // Yeni Eklenen
-    "Skarvis"
+    "Skarvis",
+    "Bebinorm", "Eribenz", "Flurapid", "Kolonat-TF", "Misopreks", "Vitanur",
+    "Meronat TF 1 000", "Meronat TF 500",
+
 };
             string[] possibleCities = new[]
             {
