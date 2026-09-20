@@ -587,7 +587,7 @@ namespace ExcelOxu
                 "ampula", "məhlul", "gel", "tabletka", "şampun", "kapsul", "aerozol", "damcı", "sprey", "krem"
             };
             string[] possibleMedicines = new[]
-{
+{"Ditrevit-T","Ditrevit T","Ditrevit", "Karnovis","Gefleks","Elaksa Piko","Diaston-B12","Diaston B12","Diaston","Ialuresp Iper",
     "Aeromaks", "Aerovin", "Aksomed", "Aqneteks Forte", "Arovaban", "Artron", "Artron A", "Buderen",
     "Dekspan", "Diafleks", "Difluvid", "Efilen", "Egeron", "Elafra", "Enurezin", "Epafor", "Estilak",
     "Flagimet", "Flaksidel", "Foligin-5", "Gera", "Hifes", "Ginestil Lavanda", "Ginestil",
@@ -1641,11 +1641,11 @@ namespace ExcelOxu
                 "ampula", "məhlul", "gel", "tabletka", "şampun", "kapsul", "aerozol", "damcı", "sprey", "krem"
             };
             string[] possibleMedicines = new[]
-{
+{"Ditrevit-T","Ditrevit T","Ditrevit", "Karnovis","Gefleks","Elaksa Piko","Diaston-B12","Diaston B12","Diaston","Ialuresp Iper",
     "Aeromaks", "Aerovin", "Aksomed", "Aqneteks Forte", "Arovaban", "Artron", "Artron A", "Buderen",
     "Dekspan", "Diafleks", "Difluvid", "Efilen", "Egeron", "Elafra", "Enurezin", "Epafor", "Estilak",
     "Flagimet", "Flaksidel", "Foligin-5", "Gera", "Hifes", "Ginestil Lavanda", "Ginestil",
-    "Klindabioks", "Lekart", "Mastaq gel", "Mukobronx", "Natamiks", "Neomezol", "Nervio B12",
+    "Klindabioks", "Lekart", "Mastaq gel", "Mukobronx", "Natamiks", "Neomezol", "Nervio B12","Dezor Plus",
     "Neyrotilin", "Panorin", "Panorin A", "Papil Derma", "Papil-Off", "Probien", "Proktotrombin",
     "Protesol", "Psilomusil", "Qliaton Forte","Resalfu 25/125", "Resalfu 25/250","Rinoret", "Rumalon", "Rudaza", "Senaval",
     "Serfunal", "Soludazol", "Spazmolizin", "Tromisin", "Ulpriks", "Uroseptin", "Vasklor",
@@ -1935,10 +1935,10 @@ namespace ExcelOxu
                 "ampula", "məhlul", "gel", "tabletka", "şampun", "kapsul", "aerozol", "damcı", "sprey", "krem"
             };
             string[] possibleMedicines = new[]
-{
+{"Ditrevit-T","Ditrevit T","Ditrevit", "Karnovis","Gefleks","Elaksa Piko","Diaston-B12","Diaston B12","Diaston","Ialuresp Iper",
     "Aeromaks", "Aerovin", "Aksomed", "Agneteks Forte", "Arovaban", "Artron", "Artron A", "Buderen",
     "Dekspan", "Diafleks", "Difluvid", "Efilen", "Egeron", "Elafra", "Enurezin", "Epafor", "Estilak",
-    "Flagimet", "Flaksidel", "Foligin-5", "Gera", "Hifes", "Ginestil Lavanda", "Ginestil",
+    "Flagimet", "Flaksidel", "Foligin 5", "Gera", "Hifes", "Ginestil Lavanda", "Ginestil",
     "Klindabioks", "Lekart", "Mastaq gel", "Mukobronx", "Natamiks", "Neomezol", "Nervio B12",
     "NEYROTILIN 4ML N5","NEYROLITIN N5 AMP", "Panorin", "Panorin A", "Papil Derma", "PapilOff", "Probien", "Proktotrombin",
     "Protesol", "Psilomusil", "Gliaton Forte","Resalfu 25/125", "Resalfu 25/250","Rinoret", "Rumalon", "Rudaza", "Senaval",
@@ -1947,7 +1947,7 @@ namespace ExcelOxu
     "Biostrepta", "Profideks",
     "Skarvis",
     "Bebinorm", "Eribenz", "Flurapid", "Kolonat-TF", "Misopreks", "Vitanur",
-    "Meronat TF 500", "Meronat TF","Dermizol-G","Vifemma","Doklopid","Doclopid","Berap","Betril","Bestok","Prekor","Precor"
+    "Meronat TF 500", "Meronat TF","DERMIZOL G","Vifemma","Doklopid","Doclopid","Berap","Betril","Bestok","Prekor","Precor"
 
 };
             string[] possibleCities = new[]
