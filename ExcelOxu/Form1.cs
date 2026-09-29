@@ -599,7 +599,8 @@ namespace ExcelOxu
     "Biostrepta", "Profideks",
     "Skarvis",
     "Bebinorm", "Eribenz", "Flurapid", "Kolonat-TF", "Misopreks", "Vitanur",
-    "Meronat TF 1 000", "Meronat TF 500","Dermizol-G","Vifemma","Doklopid","Doclopid","Berap","Betril","Bestok","Prekor","Precor"
+    "Meronat TF 1 000", "Meronat TF 500","Dermizol-G","Vifemma","Doklopid","Doclopid","Berap","Betril","Bestok","Prekor","Precor",
+    "Dezor Plus","inoks","ialuresp iher","Desnaler","AmpaMet 12,5/1000","AmpaMet 12,5/500","GliZiyaMet 50/1000","GliZiyaMet 50/500","Ampamet 12.5mq+1000mq","Ampamet 12.5mq+500mq","Qliziyamet 50mq+1000mq","Qliziyamet 50mq+500mq"
 
 };
             string[] possibleCities = new[]
@@ -1017,16 +1018,23 @@ namespace ExcelOxu
             //zeytun aptek
 
             // Normalize Med Name
+            // Normalize Med Name
             string NormalizeMedName(string raw)
             {
-                int lastStart = raw.LastIndexOf("(");
-                int lastEnd = raw.LastIndexOf(")");
-                if (lastStart >= 0 && lastEnd > lastStart)
-                    raw = raw.Remove(lastStart, lastEnd - lastStart + 1);
+                if (string.IsNullOrWhiteSpace(raw)) return "";
 
-                if (raw.Contains("№"))
+                // Sadece en sondaki ", шт" gibi birim ekini siler
+                if (raw.EndsWith(", шт", StringComparison.OrdinalIgnoreCase))
+                    raw = raw.Substring(0, raw.Length - 4);
+
+                // Sondan başlayarak üretici ve ülke parantezlerini (en dıştaki son parantezleri) temizler
+                while (raw.TrimEnd().EndsWith(")"))
                 {
-                    raw = raw.Substring(0, raw.IndexOf("№")).Trim();
+                    int lastStart = raw.LastIndexOf("(");
+                    if (lastStart >= 0)
+                        raw = raw.Substring(0, lastStart).Trim();
+                    else
+                        break;
                 }
 
                 return raw.Trim().ToLowerInvariant();
@@ -1645,7 +1653,7 @@ namespace ExcelOxu
     "Aeromaks", "Aerovin", "Aksomed", "Aqneteks Forte", "Arovaban", "Artron", "Artron A", "Buderen",
     "Dekspan", "Diafleks", "Difluvid", "Efilen", "Egeron", "Elafra", "Enurezin", "Epafor", "Estilak",
     "Flagimet", "Flaksidel", "Foligin-5", "Gera", "Hifes", "Ginestil Lavanda", "Ginestil",
-    "Klindabioks", "Lekart", "Mastaq gel", "Mukobronx", "Natamiks", "Neomezol", "Nervio B12","Dezor Plus",
+    "Klindabioks", "Lekart", "Mastaq gel", "Mukobronx", "Natamiks", "Neomezol", "Nervio B12",
     "Neyrotilin", "Panorin", "Panorin A", "Papil Derma", "Papil-Off", "Probien", "Proktotrombin",
     "Protesol", "Psilomusil", "Qliaton Forte","Resalfu 25/125", "Resalfu 25/250","Rinoret", "Rumalon", "Rudaza", "Senaval",
     "Serfunal", "Soludazol", "Spazmolizin", "Tromisin", "Ulpriks", "Uroseptin", "Vasklor",
@@ -1653,7 +1661,8 @@ namespace ExcelOxu
     "Biostrepta", "Profideks",
     "Skarvis",
     "Bebinorm", "Eribenz", "Flurapid", "Kolonat-TF", "Misopreks", "Vitanur",
-    "Meronat TF 500", "Meronat TF","Dermizol-G","Vifemma","Doklopid","Doclopid","Berap","Betril","Bestok","Prekor","Precor"
+    "Meronat TF 1 000", "Meronat TF 500","Dermizol-G","Vifemma","Doklopid","Doclopid","Berap","Betril","Bestok","Prekor","Precor",
+    "Dezor Plus","inoks","ialuresp iher","Desnaler","AmpaMet 12,5/1000","AmpaMet 12,5/500","GliZiyaMet 50/1000","GliZiyaMet 50/500","Ampamet 12.5mq+1000mq","Ampamet 12.5mq+500mq","Qliziyamet 50mq+1000mq","Qliziyamet 50mq+500mq"
 
 };
             string[] possibleCities = new[]
@@ -1935,7 +1944,7 @@ namespace ExcelOxu
                 "ampula", "məhlul", "gel", "tabletka", "şampun", "kapsul", "aerozol", "damcı", "sprey", "krem"
             };
             string[] possibleMedicines = new[]
-{"Ditrevit-T","Ditrevit T","Ditrevit", "Karnovis","Gefleks","Elaksa Piko","Diaston-B12","Diaston B12","Diaston","Ialuresp Iper",
+{"Ditrevit-T","Ditrevit T","Ditrevit", "Karnovis","Gefleks","Elaksa Piko","Diaston-B12","Diaston B12","Diaston","Ialuresp Iper","Aluresp","Inoks n28",
     "Aeromaks", "Aerovin", "Aksomed", "Agneteks Forte", "Arovaban", "Artron", "Artron A", "Buderen",
     "Dekspan", "Diafleks", "Difluvid", "Efilen", "Egeron", "Elafra", "Enurezin", "Epafor", "Estilak",
     "Flagimet", "Flaksidel", "Foligin 5", "Gera", "Hifes", "Ginestil Lavanda", "Ginestil",
@@ -1947,7 +1956,8 @@ namespace ExcelOxu
     "Biostrepta", "Profideks",
     "Skarvis",
     "Bebinorm", "Eribenz", "Flurapid", "Kolonat-TF", "Misopreks", "Vitanur",
-    "Meronat TF 500", "Meronat TF","DERMIZOL G","Vifemma","Doklopid","Doclopid","Berap","Betril","Bestok","Prekor","Precor"
+    "Meronat TF 500", "Meronat TF","DERMIZOL G","Vifemma","Doklopid","Doclopid","Berap","Betril","Bestok","Prekor","Precor",
+    "AmpaMet 12,5/1000","AmpaMet 12,5/500","GliZiyaMet 50/1000","GliZiyaMet 50/500","Ampamet 12.5mq+1000mq","Ampamet 12.5mq+500mq","Qliziyamet 50mq+1000mq","Qliziyamet 50mq+500mq", "Dezor Plus","inoks","ialuresp iher","Desnaler",
 
 };
             string[] possibleCities = new[]
@@ -2287,7 +2297,7 @@ namespace ExcelOxu
 
             var pivot = new Dictionary<string, Dictionary<string, double>>();
 
-            int firstRow = 4; // başlıqdan sonrakı sətir
+            int firstRow = 3; // başlıqdan sonrakı sətir
             int lastRow = ws.LastRowUsed().RowNumber() - 1;
 
             for (int rowNum = firstRow; rowNum <= lastRow; rowNum++)

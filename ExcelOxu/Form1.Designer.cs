@@ -147,7 +147,7 @@
             button9.Name = "button9";
             button9.Size = new Size(192, 44);
             button9.TabIndex = 8;
-            button9.Text = "Epid";
+            button9.Text = "Epid Ümumi";
             button9.UseVisualStyleBackColor = true;
             button9.Click += button9_Click;
             // 
